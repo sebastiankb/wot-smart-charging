@@ -1,0 +1,32 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "@type": "Thing",
+    "title": "PV-System",
+    "base": "mqtt://192.168.178.64:1883",
+    "securityDefinitions": {
+        "nosec_sc": { "scheme": "nosec"}},
+    "security": ["nosec_sc"],
+    "events": {
+        "status": {
+            "title": "Operating status",
+            "date": {"type": "string",
+            "enum": ["powerOn","powerOff","error"]},
+            "forms": [
+                {
+                    "href": "PV-System/events/status",
+                    "contentType": "text/plain"                }]
+        },
+        "power": {
+            "title": "Current power",
+            "data": {"type": "number",
+            "unit": "W",
+            "minimum": 0,
+            "maximum": 7500},
+            "forms": [
+                {   
+                    "href": "PV-System/events/power",
+                    "contentType": "text/plain"                }
+            ]
+        }
+    }
+}
