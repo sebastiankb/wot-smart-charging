@@ -98,23 +98,6 @@ servient.start().then((WoT) => {
         power = 0.0;
 		hourOfDay = 6; // with morning hours
 		
-		// set property handlers (using async-await)
-		/*thing.setPropertyReadHandler("status", async () => status);
-        thing.setPropertyReadHandler("power", async () => power);
-		thing.setPropertyReadHandler("hourOfDay", async () => hourOfDay);
-		*/
-
-		// set action handlers (using async-await)
-		/*thing.setActionHandler("start", async (params, options) => {
-            start();
-		});
-		thing.setActionHandler("stop", async (params, options) => {
-            stop();
-		});
-		thing.setActionHandler("error", async (params, options) => {
-            error();
-		});
-		*/
         // expose the thing
         thing.expose().then(() => {
             console.info(thing.getThingDescription().title + " ready");
