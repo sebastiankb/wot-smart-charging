@@ -8,7 +8,7 @@ Simulation of a photovoltaic system (based on MQTT) and an electric car (based o
 * `npm install @node-wot/binding-file@0.7.5`
 
 # Run Application
-* start PV simulation in terminal I: `node pv-system.js` 
+* start PV simulation in terminal I: `node pv-system.js <MQTT_Broker_Address:Port>` (e.g.,`node pv-system.js 127.0.0.1:1883`) 
 * start eCar simulation in terminal II: `node smart-charging.js` 
 * start smart charging application in terminal III: `node smart-charging.js` 
 

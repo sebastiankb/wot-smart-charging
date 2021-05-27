@@ -1,36 +1,34 @@
-// create a node-wot servient
+/**
+ * Simple PV/sun inverter simulator 
+ * 
+ * Command line call needs MQTT broker address with port number
+ * 
+ * E.g., node pv-system.js 127.0.0.1:1883
+ */
+
+// import dependencies
 const Servient = require('@node-wot/core').Servient
 const MqttBrokerServer = require('@node-wot/binding-mqtt').MqttBrokerServer
 
+// read the broker address from command line 
+const args = process.argv.slice(2)
+
+if(args[0]==undefined) {
+
+	console.log("MQTT borker address is missing. \nCommand line call needs MQTT broker address with port number. E.g.:\nnode pv-system.js 127.0.0.1:1883")
+	process.exit()
+}
+
 // create Servient add HTTP binding with port configuration
 let servient = new Servient();
-servient.addServer(new MqttBrokerServer("mqtt://192.168.178.64:1883"));
+servient.addServer(new MqttBrokerServer("mqtt://" +args[0]));
 
-let status; // enum
-let power; // number
+let status; // powerOn, powerOff, error
+let power; // in W
 let hourOfDay;
 
-function start() {
-    console.log("Starting PV System...");
-	status = "powerOn";
-    power = 0;
-}
-
-function stop() {
-    console.log("Starting PV System...");
-    status = "powerOff";
-	power = 0;
-}
-
-function error() {
-	console.log("PV System failure...");
-	status = "error";
-	power = 0;
-}
-
-
 function sunMovesOn() {
-	setTimeout(function(){
+	setInterval(function(){
 		// get current seconds and transform it into hours
 		// 60 seconds ~ 24 hours -> 2.5 secs means 1 hour
 		// --> 1 minute is one day
@@ -38,7 +36,6 @@ function sunMovesOn() {
 		let secs = date.getSeconds();
 		hourOfDay = Math.round(secs / 2.5);
 		
-//		if (status == "powerOn") {
 			if (hourOfDay >= 6 && hourOfDay <= 18) {
 				// "power" hours
 				let step = 1000;
@@ -47,17 +44,14 @@ function sunMovesOn() {
 				} else {
 					power = (hourOfDay-5) * step;
 				}
+				status = "powerOn"
 			} else {
 				power = 0;
+				status = "powerOff"
 			}
-/*		} else {
-			power = 0;
-		}
-		*/
+
 		console.log("Charging power is " + power);
 		
-		// moves on all the time
-		sunMovesOn();
 	}, 250);
 }
 
@@ -67,8 +61,8 @@ servient.start().then((WoT) => {
         description: "Solar power system",
         events: {
 			"status": {
-				"title": "Betriebszustand",
-				"description": "Mögliche Zustände (Strom Produktion, Nachtmodus, Fehler)",
+				"title": "Operating status",
+				"description": "Possible operating status (powerOn, powerOff, error)",
 				"data": {"type": "string",
 				"enum": [
 					"powerOn",
@@ -77,19 +71,11 @@ servient.start().then((WoT) => {
 				]}
 			},
 			"power": {
-				"title": "Aktuelle Leistung",
-				"description": "Leistung in Watt",
+				"title": "Current power",
+				"description": "Power in Watt",
 				"date" : {"type": "number",
 				"unit": "W"}
 			} 
-        },
-        actions: {
-			"start": {
-			},
-			"stop": {
-			},
-			"error": {
-			}
         }
     }).then((thing) => {
         console.log("Produced " + thing.getThingDescription().title);
@@ -102,20 +88,12 @@ servient.start().then((WoT) => {
         thing.expose().then(() => {
             console.info(thing.getThingDescription().title + " ready");
             console.info("TD : " + JSON.stringify(thing.getThingDescription()));
-            thing.readProperty("status").then((c) => {
-                console.log("status is " + c);
-            });
-            thing.readProperty("power").then((c) => {
-                console.log("power is " + c);
-			});
 			
 			setInterval(function(){
 				thing.emitEvent('power', power);
 				thing.emitEvent('status', status);
-
 			}, 1000);
-
-			
+			// start sun simulation
 			sunMovesOn();
         });
     });
