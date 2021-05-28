@@ -1,4 +1,10 @@
-// create a node-wot servient
+/**
+ * Simple eCar simulator 
+ * 
+ * Call: node ecar.js
+ */
+
+// import dependencies
 const Servient = require('@node-wot/core').Servient
 const HttpServer = require('@node-wot/binding-http').HttpServer
 
@@ -8,14 +14,15 @@ servient.addServer(new HttpServer({
     // port: 8081 // (default 8080)
 }));
 
-let soc;
-let driving;
-let status;
+// runtime data
+let soc; // state of charge 0..100%
+let driving; // is driving true/false
+let status; // readyToCharge, charging, stopCharging
 
 function driveCar() {
     console.log("Driving...");
     driving = true;
-    status = false;
+    //status = "stopCharging";
     setTimeout(function(){
         //  code after time
         let decStep = 0.25;
@@ -41,7 +48,6 @@ function stopCar() {
 
 function chargeCar() {
     console.log("Charging...");
-    status = "charging";
     driving = false;
     setTimeout(function(){
         //  code after time
@@ -53,8 +59,10 @@ function chargeCar() {
             console.log("Battery fully charged :-)");
         } else {
             // keep on charging ?
-            if (status) {
+            if (status=="charging") {
+
                 chargeCar();
+                console.log(status);
             }
         }
         console.log("Charging status increased by " + incStep + " -> " + soc);
@@ -63,7 +71,8 @@ function chargeCar() {
 
 function stopCharging() {
     console.log("STOP charging!");
-    status = false;
+    status = "readyToCharge";
+
 }
 
 servient.start().then((WoT) => {
@@ -87,9 +96,9 @@ servient.start().then((WoT) => {
             },
             status: {
                 type: "string",
-                description: "Is car charging",
-                observable: true,
-                readOnly: true
+                description: "Current car status (readyToCharge, charging, stopCharging)",
+                "enum": ["readyToCharge","charging","stopCharging"],
+                observable: true
             }
         },
         actions: {
@@ -109,7 +118,7 @@ servient.start().then((WoT) => {
     }).then((thing) => {
         console.log("Produced " + thing.getThingDescription().title);
         // init property values
-        soc = 85.25;
+        soc = 35.25;
         driving = false;
         status = "notReadyToCharge";
 		// set property handlers (using async-await)
@@ -120,15 +129,19 @@ servient.start().then((WoT) => {
 
 		// set action handlers (using async-await)
 		thing.setActionHandler("startDriving", async (params, options) => {
+            status = "stopCharging";
             driveCar();
 		});
 		thing.setActionHandler("stopDriving", async (params, options) => {
+            status = "readyToCharge";
             stopCar();
 		});
         thing.setActionHandler("startCharging", async (params, options) => {
+            status = "charging";
             chargeCar();
 		});
         thing.setActionHandler("stopCharging", async (params, options) => {
+            status = "stopCharging";
             stopCharging();
 		});
 
