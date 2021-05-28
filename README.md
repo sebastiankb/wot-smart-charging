@@ -1,7 +1,11 @@
 # Smart Charging with Web of Things
 Simulation of a photovoltaic system (based on MQTT) and an electric car (based on HTTP) to demonstrate a smart charging scenario based on the W3C Web of Things approach.
 
-# Install dependencies (Eclipse node-wot)
+# Prerequisites
+* [NodeJS](https://nodejs.org/) version 10+
+* MQTT broker (e.g., [Eclipse Mosquitto](http://mosquitto.org/))
+
+# Install dependencies ([Eclipse node-wot](https://github.com/eclipse/thingweb.node-wot/))
 * `npm install @node-wot/core@0.7.5`
 * `npm install @node-wot/binding-http@0.7.5`
 * `npm install @node-wot/binding-mqtt@0.7.5`
