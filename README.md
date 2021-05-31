@@ -5,9 +5,10 @@ Simulation of a photovoltaic system (based on MQTT) and an electric car (based o
 --- | --- | ---
 |Protocol|MQTT|HTTP|
 |Content-type|text-plain|application-json|
-|Data model / functions|status (“powerOn”, “powerOff”, “error”)| status (“readyToCharge”, “charging”, “stopCharging”)|
-| |power (0..7500 Watt)| •	soc (0..100%)|
-
+|Data model / functions|status ("powerOn”, "powerOff”, "error”)<br />Topic (publish): {..}/status| status ("readyToCharge”, "charging”, "stopCharging”)<br />Resource (GET): {..}/state|
+| |power (0..7500 Watt)<br />Topic (publish): {..}/power | soc (0..100%)<br />Resource (GET): {..}/soc|
+| | | startCharging<br />Resource (POST): {..}/startCharging |
+| | | stopCharging<br />Resource (POST): {..}/stopCharging  |
 
 # Prerequisites
 * [NodeJS](https://nodejs.org/) version 10+
