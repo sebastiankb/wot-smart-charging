@@ -1,6 +1,14 @@
 # Smart Charging with Web of Things
 Simulation of a photovoltaic system (based on MQTT) and an electric car (based on HTTP) to demonstrate a smart charging scenario based on the W3C Web of Things approach.
 
+| |Sun-Inverter|eCar|
+--- | --- | ---
+|Protocol|MQTT|HTTP|
+|Content-type|text-plain|application-json|
+|Data model / functions|status (“powerOn”, “powerOff”, “error”)| status (“readyToCharge”, “charging”, “stopCharging”)|
+| |power (0..7500 Watt)| •	soc (0..100%)|
+
+
 # Prerequisites
 * [NodeJS](https://nodejs.org/) version 10+
 * MQTT broker (e.g., [Eclipse Mosquitto](http://mosquitto.org/))

@@ -73,8 +73,12 @@ servient.start().then((WoT) => {
 			"power": {
 				"title": "Current power",
 				"description": "Power in Watt",
-				"date" : {"type": "number",
-				"unit": "W"}
+				"data" : {
+					"type": "number", 
+					"minimum": 0,
+					"maximum": 7500,
+					"unit": "W"
+				}
 			} 
         }
     }).then((thing) => {
