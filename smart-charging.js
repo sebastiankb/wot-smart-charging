@@ -40,11 +40,12 @@ wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => {
                     pv_power = power;
                 });
 
-                // request each 5s the ecar status and soc
+                // request each ~5s the ecar status and soc
+                // (the timeout should be a little less than of the next function)
                 setInterval(async function(){
                     ecar_status= await thing_ecar.readProperty("status");
                     ecar_soc= await thing_ecar.readProperty("soc");
-                }, 5000); 
+                }, 4950); 
 
                 // check each 5s, if eCar is ready to charge
                 setInterval(async function(){
@@ -57,7 +58,7 @@ wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => {
                             thing_ecar.invokeAction("startCharging")
 
                         } else {
-                            console.info("To less sun power (" + pv_power +" Watt)! Wait...")
+                            console.info("Too little sun power (" + pv_power +" Watt)! Wait...")
                         }
                     }
                     else if(ecar_status==="charging"){
