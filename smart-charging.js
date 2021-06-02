@@ -16,8 +16,8 @@ let wotHelper = new Helpers(servient);
 const CHARGE_POWER = 4000; // threshold for starting charge process
 
 // fetch all 
-wotHelper.fetch("http://192.168.178.114:8080/ecar/").then(async (td_ecar) => {
-wotHelper.fetch("file://pv-system/pv-system.td.jsonld").then(async (td_pv) => {
+wotHelper.fetch("http://127.0.0.1:8080/ecar/").then(async (td_ecar) => {
+wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => {
 
     try {
         servient.start().then((WoT) => {
