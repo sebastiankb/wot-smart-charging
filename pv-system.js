@@ -9,6 +9,7 @@
 // import dependencies
 const Servient = require('@node-wot/core').Servient
 const MqttBrokerServer = require('@node-wot/binding-mqtt').MqttBrokerServer
+const fs = require('fs');
 
 // read the broker address from command line 
 const args = process.argv.slice(2)
@@ -19,7 +20,7 @@ if(args[0]==undefined) {
 	process.exit()
 }
 
-// create Servient add HTTP binding with port configuration
+// create Servient add MQTT binding with port configuration
 let servient = new Servient();
 servient.addServer(new MqttBrokerServer("mqtt://" +args[0]));
 
@@ -58,6 +59,7 @@ function sunMovesOn() {
 servient.start().then((WoT) => {
     WoT.produce({
         title: "PV-System",
+		id: "urn:dev:wot:example:pv-system",
         description: "Solar power system",
         events: {
 			"status": {
@@ -93,6 +95,12 @@ servient.start().then((WoT) => {
             console.info(thing.getThingDescription().title + " ready");
             console.info("TD : " + JSON.stringify(thing.getThingDescription()));
 			
+			// Save TD to an external file (needed for smart-charging.js)
+			fs.writeFile('pv-system.td.jsonld', JSON.stringify(thing.getThingDescription(), null, 2), (err) => {
+				if (err) throw err;
+				console.log('Saved TD to pv-system.td.jsonld file');
+			});
+
 			setInterval(function(){
 				thing.emitEvent('power', power);
 				thing.emitEvent('status', status);
