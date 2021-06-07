@@ -16,8 +16,8 @@ let wotHelper = new Helpers(servient);
 const CHARGE_POWER = 4000; // threshold for starting charge process
 
 // fetch all 
-wotHelper.fetch("http://192.168.178.114:8080/ecar/").then(async (td_ecar) => {
-wotHelper.fetch("file://pv-system/pv-system.td.jsonld").then(async (td_pv) => {
+wotHelper.fetch("http://127.0.0.1:8080/ecar/").then(async (td_ecar) => {
+wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => {
 
     try {
         servient.start().then((WoT) => {
@@ -40,11 +40,12 @@ wotHelper.fetch("file://pv-system/pv-system.td.jsonld").then(async (td_pv) => {
                     pv_power = power;
                 });
 
-                // request each 5s the ecar status and soc
+                // request each ~5s the ecar status and soc
+                // (the timeout should be a little less than of the next function)
                 setInterval(async function(){
                     ecar_status= await thing_ecar.readProperty("status");
                     ecar_soc= await thing_ecar.readProperty("soc");
-                }, 5000); 
+                }, 4950); 
 
                 // check each 5s, if eCar is ready to charge
                 setInterval(async function(){
@@ -57,7 +58,7 @@ wotHelper.fetch("file://pv-system/pv-system.td.jsonld").then(async (td_pv) => {
                             thing_ecar.invokeAction("startCharging")
 
                         } else {
-                            console.info("To less sun power (" + pv_power +" Watt)! Wait...")
+                            console.info("Too little sun power (" + pv_power +" Watt)! Wait...")
                         }
                     }
                     else if(ecar_status==="charging"){
