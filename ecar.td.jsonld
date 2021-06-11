@@ -3,7 +3,7 @@
     "@type": "Thing",
     "security": ["nosec_sc"],
     "securityDefinitions": {
-        "nosec_sc": {"scheme": "nosec"}
+        "nosec_sc": { "scheme": "nosec" }
     },
     "title": "eCar",
     "description": "eCarThing",
@@ -16,13 +16,22 @@
             "minimum": 0,
             "maximum": 100,
             "unit": "%",
-            "forms": [
-                {
-                    "href": "/ecar/properties/soc",
-                    "contentType": "application/json",
-                    "op": ["readproperty"]
-                }
-            ]
+            "forms": [{
+                "href": "/ecar/properties/soc",
+                "contentType": "application/json",
+                "op": ["readproperty"]
+            }]
+        },
+        "driving": {
+            "type": "boolean",
+            "description": "Is car driving around",
+            "observable": true,
+            "readOnly": true,
+            "forms": [{
+                "href": "/ecar/properties/driving",
+                "contentType": "application/json",
+                "op": ["readproperty"]
+            }]
         },
         "status": {
             "type": "string",
@@ -33,35 +42,45 @@
                 "charging",
                 "stopCharging"
             ],
-            "forms": [
-                {
-                    "href": "/ecar/properties/status",
-                    "contentType": "application/json",
-                    "op": ["readproperty"]
-                }
-            ]
+            "forms": [{
+                "href": "/ecar/properties/status",
+                "contentType": "application/json",
+                "op": ["readproperty"]
+            }]
         }
     },
     "actions": {
+        "startDriving": {
+            "description": "Starting to drive",
+            "forms": [{
+                "href": "/ecar/actions/startDriving",
+                "contentType": "application/json",
+                "op": ["invokeaction"]
+            }]
+        },
+        "stopDriving": {
+            "description": "Stopping to drive",
+            "forms": [{
+                "href": "/ecar/actions/stopDriving",
+                "contentType": "application/json",
+                "op": ["invokeaction"]
+            }]
+        },
         "startCharging": {
             "description": "Starting to charge",
-            "forms": [
-                {
-                    "href": "/ecar/actions/startCharging",
-                    "contentType": "application/json",
-                    "op": ["invokeaction"]
-                }
-            ]
+            "forms": [{
+                "href": "/ecar/actions/startCharging",
+                "contentType": "application/json",
+                "op": ["invokeaction"]
+            }]
         },
         "stopCharging": {
             "description": "Stopping to charge",
-            "forms": [
-                {
-                    "href": "/ecar/actions/stopCharging",
-                    "contentType": "application/json",
-                    "op": ["invokeaction"]
-                }
-            ]
+            "forms": [{
+                "href": "/ecar/actions/stopCharging",
+                "contentType": "application/json",
+                "op": ["invokeaction"]
+            }]
         }
     }
 }
