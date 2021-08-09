@@ -29,6 +29,8 @@ let power; // in W
 let hourOfDay;
 
 function sunMovesOn() {
+		
+	let step = 1000; // "power" hours
 	setInterval(function(){
 		// get current seconds and transform it into hours
 		// 60 seconds ~ 24 hours -> 2.5 secs means 1 hour
@@ -37,11 +39,10 @@ function sunMovesOn() {
 		let secs = date.getSeconds();
 		hourOfDay = Math.round(secs / 2.5);
 		
-			if (hourOfDay >= 6 && hourOfDay <= 18) {
-				// "power" hours
-				let step = 1000;
-				if (hourOfDay > 12) {
-					power = (19-hourOfDay) * step;
+			if (hourOfDay >= 6 && hourOfDay <= 20) {
+
+				if (hourOfDay > 13) {
+					power = (21-hourOfDay) * step;
 				} else {
 					power = (hourOfDay-5) * step;
 				}
@@ -51,9 +52,9 @@ function sunMovesOn() {
 				status = "powerOff"
 			}
 
-		console.log("Charging power is " + power);
+		console.log("PV inverter "+"("+hourOfDay+":00): " + power + " Watt");
 		
-	}, 250);
+	}, 2500);
 }
 
 servient.start().then((WoT) => {
