@@ -1,7 +1,17 @@
-{
+{  "@context": "https://www.w3.org/2019/wot/td/v1",
+  "@type": "Thing",
   "title": "PV-System",
   "id": "urn:dev:wot:example:pv-system",
   "description": "Solar power system",
+  "base" : "mqtt://127.0.0.1:1883",
+  "security": [
+    "nosec_sc"
+  ],
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
   "events": {
     "status": {
       "title": "Operating status",
@@ -16,7 +26,7 @@
       },
       "forms": [
         {
-          "href": "mqtt://broker.hivemq.com:1883/PV-System/events/status",
+          "href": "/PV-System/events/status",
           "contentType": "application/json",
           "op": [
             "subscribeevent",
@@ -36,7 +46,7 @@
       },
       "forms": [
         {
-          "href": "mqtt://broker.hivemq.com:1883/PV-System/events/power",
+          "href": "/PV-System/events/power",
           "contentType": "application/json",
           "op": [
             "subscribeevent",
@@ -44,16 +54,6 @@
           ]
         }
       ]
-    }
-  },
-  "@context": "https://www.w3.org/2019/wot/td/v1",
-  "@type": "Thing",
-  "security": [
-    "nosec_sc"
-  ],
-  "securityDefinitions": {
-    "nosec_sc": {
-      "scheme": "nosec"
     }
   }
 }

@@ -16,13 +16,13 @@ let wotHelper = new Helpers(servient);
 const CHARGE_POWER = 4000; // threshold for starting charge process
 
 // fetch all 
-wotHelper.fetch("http://127.0.0.1:8080/ecar/").then(async (td_ecar) => {
-wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => {
+wotHelper.fetch("http://127.0.0.1:8080/ecar/").then(async (td_ecar) => { // (1)
+wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => { // (2)
 
     try {
         servient.start().then((WoT) => {
-            WoT.consume(td_pv).then((thing_pv) => {
-            WoT.consume(td_ecar).then((thing_ecar) => {
+            WoT.consume(td_pv).then((thing_pv) => { // (3)
+            WoT.consume(td_ecar).then((thing_ecar) => { // (4)
 
                 // keep latest PV and eCar values
                 let pv_status;
@@ -30,30 +30,30 @@ wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => {
                 let ecar_status; 
                 let ecar_soc; 
 
-                // subscribe to current PV status
-                thing_pv.subscribeEvent('status', (status) => {
+                // subscribe to current PV status (5)
+                thing_pv.subscribeEvent('status', (status) => { 
                     pv_status = status;
                 });
 
-                // subscribe to current sun power production
-                thing_pv.subscribeEvent('power', (power) => {
+                // subscribe to current sun power production (6)
+                thing_pv.subscribeEvent('power', (power) => { 
                     pv_power = power;
                 });
 
-                // request each ~5s the ecar status and soc
+                // request each ~5s the ecar status and soc (7)
                 // (the timeout should be a little less than of the next function)
                 setInterval(async function(){
                     ecar_status= await thing_ecar.readProperty("status");
                     ecar_soc= await thing_ecar.readProperty("soc");
                 }, 4950); 
 
-                // check each 5s, if eCar is ready to charge
+                // check each 5s, if eCar is ready to charge (8)
                 setInterval(async function(){
                     console.info(pv_status,pv_power,ecar_status,ecar_soc)
-                    if(ecar_status==="readyToCharge" ){
+                    if(ecar_status==="readyToCharge" ){ // (9)
                         console.info("eCar is ready to charge! Check the current sun power.")
 
-                        if(pv_power>=CHARGE_POWER) {
+                        if(pv_power>=CHARGE_POWER) { // (10)
                             console.info("Start charging")
                             thing_ecar.invokeAction("startCharging")
 
