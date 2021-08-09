@@ -64,7 +64,7 @@ wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => { // (2)
                     else if(ecar_status==="charging"){
                         console.info("eCar's SOC is " + ecar_soc +"%")
                     }
-                }, 5000); 
+                }, 2500); // update each 2.5s
 
 
             });

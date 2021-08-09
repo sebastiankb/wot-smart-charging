@@ -25,7 +25,7 @@ function driveCar() {
     //status = "stopCharging";
     setTimeout(function(){
         //  code after time
-        let decStep = 0.25;
+        let decStep = 5.25;
         soc -= 1;
         if (soc <= 0) {
             driving = false;
@@ -51,7 +51,7 @@ function chargeCar() {
     driving = false;
     setTimeout(function(){
         //  code after time
-        let incStep = 0.25;
+        let incStep = 5.25;
         soc += incStep;
         if (soc >= 100) {
             soc = 100.0;
@@ -66,7 +66,7 @@ function chargeCar() {
             }
         }
         console.log("Charging status increased by " + incStep + " -> " + soc);
-    }, 250);
+    }, 2500);
 }
 
 function stopCharging() {
@@ -154,13 +154,13 @@ servient.start().then((WoT) => {
             });
         });
 
-        // after 5s change status
+        // after 2.5s change status
         setTimeout(function(){
             status = "readyToCharge";
             thing.readProperty("status").then((c) => {
                 console.log("eCar status is " + c);
             });
-        }, 5000); 
+        }, 2500); 
     });
 });
 
@@ -168,11 +168,11 @@ servient.start().then((WoT) => {
 const debug = console.debug
 console.debug = (package,...args) => {
  if(package !== "[core/content-serdes]" && 
- package !== "[core/exposed-thing]" && 
- package !== "[core/helpers]" && 
  package !== "[binding-http]" && 
+ package !== "[binding-http]" && 
+ package !== "[core/exposed-thing]" && 
  package !== "[core/consumed-thing]" && 
- package !== "[core/servient]"){
+ package !== "[binding-http]"){
     debug(package,...args)
  }
 }
