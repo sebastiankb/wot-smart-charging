@@ -167,14 +167,12 @@ servient.start().then((WoT) => {
 // turn off messages from core package
 const debug = console.debug
 console.debug = (package,...args) => {
- if(package !== "[core]" && 
- package !== "[binding-mqtt]" && 
- package !== "[core/content-senders]"&& 
+ if(package !== "[core/content-serdes]" && 
+ package !== "[core/exposed-thing]" && 
  package !== "[core/helpers]" && 
  package !== "[binding-http]" && 
  package !== "[core/consumed-thing]" && 
- package !== "[core/servient]"&& 
- package !== "[core/exposed-thing]"){
+ package !== "[core/servient]"){
     debug(package,...args)
  }
 }

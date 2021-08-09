@@ -25,4 +25,4 @@ Simulation of a photovoltaic system (based on MQTT) and an electric car (based o
 * start eCar simulation in terminal II: `node ecar.js` 
 * start smart charging application in terminal III: `node smart-charging.js` 
 
-Note: The PV and eCar simulations automatically expose their Thing Descriptions.
+Note: The PV and eCar simulations automatically expose their Thing Descriptions. This simple application stops when the eCar is full charged. 

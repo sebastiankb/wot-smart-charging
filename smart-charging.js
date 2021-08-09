@@ -80,9 +80,8 @@ wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => { // (2)
 // turn off messages from core package
 const debug = console.debug
 console.debug = (package,...args) => {
- if(package !== "[core]" && 
+ if(package !== "[core/content-serdes]" && 
  package !== "[binding-mqtt]" && 
- package !== "[core/content-senders]"&& 
  package !== "[core/helpers]" && 
  package !== "[binding-http]" && 
  package !== "[core/consumed-thing]" && 
