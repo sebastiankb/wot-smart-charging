@@ -25,3 +25,4 @@ Simulation of a photovoltaic system (based on MQTT) and an electric car (based o
 * start eCar simulation in terminal II: `node ecar.js` 
 * start smart charging application in terminal III: `node smart-charging.js` 
 
+Hint: The `<MQTT_Broker_Address:Port>` must be the same as provided in the Thing Description `pv-system.td.jsonld` by the `base` term .
