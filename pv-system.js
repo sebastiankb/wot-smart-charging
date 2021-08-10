@@ -115,13 +115,7 @@ servient.start().then((WoT) => {
 
 // turn off messages from core package
 const debug = console.debug
-console.debug = (package,...args) => {
- if(package !== "[core/content-serdes]" && 
- package !== "[binding-mqtt]" && 
- package !== "[core/helpers]" && 
- package !== "[binding-http]" && 
- package !== "[core/consumed-thing]" && 
- package !== "[core/servient]"){
-    debug(package,...args)
- }
-}
+console.debug = (package,...args) => {}
+
+const warn = console.warn
+console.warn = (package,...args) => {}

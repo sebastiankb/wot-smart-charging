@@ -53,19 +53,19 @@ function chargeCar() {
         //  code after time
         let incStep = 5.25;
         soc += incStep;
+
         if (soc >= 100) {
             soc = 100.0;
-            status = "stopCharging";
             console.log("Battery fully charged :-)");
-        } else {
-            // keep on charging ?
-            if (status=="charging") {
+            //complete charging and set stopCharging status 
+            setTimeout(function(){status="stopCharging"},2000);
+        } 
+        console.log("Charging status (SOC):" + soc);
 
-                chargeCar();
-                console.log(status);
-            }
-        }
-        console.log("Charging status increased by " + incStep + " -> " + soc);
+        // keep on charging ?
+        if (soc < 100) {
+            chargeCar(); // continue charging
+        } 
     }, 2500);
 }
 
@@ -160,19 +160,15 @@ servient.start().then((WoT) => {
             thing.readProperty("status").then((c) => {
                 console.log("eCar status is " + c);
             });
-        }, 2500); 
+        }, 2500);
+        
+        
     });
 });
 
 // turn off messages from core package
 const debug = console.debug
-console.debug = (package,...args) => {
- if(package !== "[core/content-serdes]" && 
- package !== "[binding-http]" && 
- package !== "[binding-http]" && 
- package !== "[core/exposed-thing]" && 
- package !== "[core/consumed-thing]" && 
- package !== "[binding-http]"){
-    debug(package,...args)
- }
-}
+console.debug = (package,...args) => {}
+
+const warn = console.warn
+console.warn = (package,...args) => {}
