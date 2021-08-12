@@ -23,7 +23,7 @@ function driveCar() {
     console.log("Driving...");
     driving = true;
     //status = "stopCharging";
-    setTimeout(function(){
+    setTimeout(function () {
         //  code after time
         let decStep = 5.25;
         soc -= 1;
@@ -47,26 +47,26 @@ function stopCar() {
 }
 
 function chargeCar() {
-    console.log("Charging...");
-    driving = false;
-    setTimeout(function(){
-        //  code after time
-        let incStep = 5.25;
-        soc += incStep;
 
-        if (soc >= 100) {
-            soc = 100.0;
+    driving = false;
+
+    let intId = setInterval(async function () {
+
+        console.log("Charging... (SOC): " + soc + "%");
+
+        if (soc == 100) {
+            soc = 100;
             console.log("Battery fully charged :-)");
             //complete charging and set stopCharging status 
-            setTimeout(function(){status="stopCharging"},2000);
-        } 
-        console.log("Charging status (SOC):" + soc);
+            clearInterval(intId); // stop loop
+        }
+        if (soc <= 99) {
+            //  charging step
+            let incStep = 4;
+            soc += incStep;
+        }
+    }, 2000);
 
-        // keep on charging ?
-        if (soc < 100) {
-            chargeCar(); // continue charging
-        } 
-    }, 2500);
 }
 
 function stopCharging() {
@@ -97,7 +97,7 @@ servient.start().then((WoT) => {
             status: {
                 type: "string",
                 description: "Current car status (readyToCharge, charging, stopCharging)",
-                "enum": ["readyToCharge","charging","stopCharging"],
+                "enum": ["readyToCharge", "charging", "stopCharging"],
                 observable: true
             }
         },
@@ -118,32 +118,31 @@ servient.start().then((WoT) => {
     }).then((thing) => {
         console.log("Produced " + thing.getThingDescription().title);
         // init property values
-        soc = 35.25;
+        soc = 32;
         driving = false;
         status = "notReadyToCharge";
-		// set property handlers (using async-await)
-		thing.setPropertyReadHandler("soc", async () => soc);
+        // set property handlers (using async-await)
+        thing.setPropertyReadHandler("soc", async () => soc);
         thing.setPropertyReadHandler("driving", async () => driving);
         thing.setPropertyReadHandler("status", async () => status);
 
-
-		// set action handlers (using async-await)
-		thing.setActionHandler("startDriving", async (params, options) => {
+        // set action handlers (using async-await)
+        thing.setActionHandler("startDriving", async (params, options) => {
             status = "stopCharging";
             driveCar();
-		});
-		thing.setActionHandler("stopDriving", async (params, options) => {
+        });
+        thing.setActionHandler("stopDriving", async (params, options) => {
             status = "readyToCharge";
             stopCar();
-		});
+        });
         thing.setActionHandler("startCharging", async (params, options) => {
             status = "charging";
             chargeCar();
-		});
+        });
         thing.setActionHandler("stopCharging", async (params, options) => {
             status = "stopCharging";
             stopCharging();
-		});
+        });
 
         // expose the thing
         thing.expose().then(() => {
@@ -155,20 +154,25 @@ servient.start().then((WoT) => {
         });
 
         // after 2.5s change status
-        setTimeout(function(){
+        setTimeout(function () {
             status = "readyToCharge";
             thing.readProperty("status").then((c) => {
                 console.log("eCar status is " + c);
             });
         }, 2500);
-        
-        
+
+        // after 2.5s change status
+        setInterval(function () {
+            if(soc==100) {status = "stopCharging"}
+        }, 2000);
+
+
     });
 });
 
 // turn off messages from core package
 const debug = console.debug
-console.debug = (package,...args) => {}
+console.debug = (package, ...args) => { }
 
 const warn = console.warn
-console.warn = (package,...args) => {}
+console.warn = (package, ...args) => { }

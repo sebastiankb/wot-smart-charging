@@ -40,12 +40,12 @@ wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => { // (2)
                     pv_power = power;
                 });
 
-                // request each ~5s the ecar status and soc (7)
+                // request each ~2s the ecar status and soc (7)
                 // (the timeout should be a little less than of the next function)
                 setInterval(async function(){
                     ecar_status= await thing_ecar.readProperty("status");
                     ecar_soc= await thing_ecar.readProperty("soc");
-                }, 5000); 
+                }, 2000); 
 
                 // check each 5s, if eCar is ready to charge (8)
                 setInterval(async function(){
