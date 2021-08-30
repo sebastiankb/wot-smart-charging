@@ -47,7 +47,7 @@ wotHelper.fetch("file://pv-system.td.jsonld").then(async (td_pv) => { // (2)
                     ecar_soc= await thing_ecar.readProperty("soc");
                 }, 2000); 
 
-                // check each 5s, if eCar is ready to charge (8)
+                // check each 2s, if eCar is ready to charge (8)
                 setInterval(async function(){
                     if(ecar_status==="readyToCharge" ){ // (9)
                         console.info("eCar is ready to charge! Check the current sun power.")
